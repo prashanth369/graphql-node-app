@@ -1,0 +1,20 @@
+{
+    "parser": "@babel/eslint-parser",
+    "extends": ["airbnb-base"],
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "no-console": "off",
+      "comma-dangle": "off",
+      "import/no-unresolved" : "off",
+      "operator-linebreak" : "off",
+      "semi": ["off", "never"],
+      "no-return-assign": "off",
+      "no-plusplus": "off",
+      "no-param-reassign": "off",
+      "indent": "off"
+  
+    }
+  }

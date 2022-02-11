@@ -1,0 +1,32 @@
+{
+  "name": "graphql-node-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/prashanth369/graphql-node-app.git",
+  "author": "Prashanth Reddy <prashanth.abc369@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ./index.js --exec babel-node",
+    "lint": "eslint . --ext .js",
+    "lint-fix": "eslint . --ext .js --fix",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^8.3.1",
+    "apollo-server-express": "^3.6.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "graphql": "^16.3.0"
+  }
+}
