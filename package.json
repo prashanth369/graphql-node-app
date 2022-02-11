@@ -6,7 +6,7 @@
   "author": "Prashanth Reddy <prashanth.abc369@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon ./index.js --exec babel-node",
+    "dev": "nodemon ./app.js --exec babel-node",
     "lint": "eslint . --ext .js",
     "lint-fix": "eslint . --ext .js --fix",
     "test": "jest"
