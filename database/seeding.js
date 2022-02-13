@@ -19,7 +19,7 @@ const DOCUMENT_UPDATE_OPTIONS = {
  * @return {object} The API data formatted from XML to JS Object
  */
 
-const fetchData = async url => {
+const fetchData = async (url) => {
   let returnData
   try {
     const { data } = await axios(url)
@@ -32,61 +32,6 @@ const fetchData = async url => {
 }
 
 /**
- * This Function is Responsible for fetching VehicleMakes Data
- */
-
-const processDocumentsData = async () => {
-  const vehicleMakesURL =
-    'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=XML'
-
-  try {
-    const vehicleMakesDataset = await fetchData(vehicleMakesURL)
-    if (vehicleMakesDataset) {
-      const responseCount = get(vehicleMakesDataset, 'Response.Count[0]')
-
-      if (responseCount && parseInt(responseCount) > 0) {
-        const vehicleMakesArray = get(
-          vehicleMakesDataset,
-          'Response.Results[0].AllVehicleMakes',
-          []
-        )
-        processRequestChunks(vehicleMakesArray)
-      }
-    }
-  } catch (err) {
-    console.log('The error message: ', err.message, vehicleMakesURL)
-  }
-}
-
-/**
- * Takes the Vehicle Makes data and sends chunks of requests to fetch vehicleTypes for Each vehicle make
- *
- * @param {object[]} vehicleMakesArray Vehicle Makes Data as an Array
- */
-
-const processRequestChunks = async vehicleMakesArray => {
-  while (vehicleMakesArray.length) {
-    await Promise.all(
-      vehicleMakesArray.splice(0, 10).map(async vehicleMake => {
-        const makeId = get(vehicleMake, 'Make_ID[0]', '')
-        const makeName = get(vehicleMake, 'Make_Name[0]', '')
-        const vehicleTypeUrl = `https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/${makeId}?format=XML`
-
-        return fetchData(vehicleTypeUrl)
-          .then(data => saveDocumentToDataStore(data, makeId, makeName))
-          .catch(err =>
-            console.log(
-              ' Error processing in the request chunks',
-              err.message,
-              makeId
-            )
-          )
-      })
-    )
-  }
-}
-
-/**
  * Stores Vehicle Makes and Vehicle Types documents to Datastore
  *
  * @param {object} data The object that has vehicleTypes data for each vehicle make
@@ -95,18 +40,20 @@ const processRequestChunks = async vehicleMakesArray => {
  */
 
 const saveDocumentToDataStore = async (data, makeId, makeName) => {
-  let vehicleTypePromises = []
-  console.log('The Makes values are ', makeId, makeName)
+  const vehicleTypePromises = []
   const responseCount = get(data, 'Response.Count[0]')
 
-  // If a Vehicle make has associated vehicle types, then save them and attach them to vehicleMake document
-  if (responseCount && parseInt(responseCount) > 0) {
+  /**
+   * If a Vehicle make has associated vehicle types, then save them
+   * and attach them to vehicleMake document
+   */
+  if (responseCount && parseInt(responseCount, 10) > 0) {
     const vehicleTypes = get(
       data,
       'Response.Results[0].VehicleTypesForMakeIds',
       []
     )
-    vehicleTypes.forEach(async vehicleType => {
+    vehicleTypes.forEach(async (vehicleType) => {
       const typeId = get(vehicleType, 'VehicleTypeId[0]')
       const typeName = get(vehicleType, 'VehicleTypeName[0]')
 
@@ -129,7 +76,7 @@ const saveDocumentToDataStore = async (data, makeId, makeName) => {
       vehicleTypes: []
     }
 
-    /** 
+    /**
      * If the Vehicle Makes has associated vehicleTypes,
      * store the vehicleTypes in datastore if they are not already in the datastore
      * and then store VehicleMake in the datastore
@@ -138,7 +85,7 @@ const saveDocumentToDataStore = async (data, makeId, makeName) => {
     if (vehicleTypePromises.length > 0) {
       const vehicleTypedata = await Promise.all(vehicleTypePromises)
       const vehicleTypeDocumentIds = vehicleTypedata.map(
-        document => document._id
+        (document) => document._id
       )
       updateData.vehicleTypes = vehicleTypeDocumentIds
 
@@ -156,6 +103,60 @@ const saveDocumentToDataStore = async (data, makeId, makeName) => {
     }
   } catch (err) {
     console.log('Error saving the vehiclemake', err.message)
+  }
+}
+
+/**
+ * Takes the Vehicle Makes data and sends chunks of requests to
+ * fetch vehicleTypes for Each vehicle make
+ *
+ * @param {object[]} vehicleMakesArray Vehicle Makes Data as an Array
+ */
+
+const processRequestChunks = async (vehicleMakesArray) => {
+  while (vehicleMakesArray.length) {
+    await Promise.all(
+      vehicleMakesArray.splice(0, 10).map(async (vehicleMake) => {
+        const makeId = get(vehicleMake, 'Make_ID[0]', '')
+        const makeName = get(vehicleMake, 'Make_Name[0]', '')
+        const vehicleTypeUrl = `https://vpic.nhtsa.dot.gov/api/vehicles/GetVehicleTypesForMakeId/${makeId}?format=XML`
+
+        return fetchData(vehicleTypeUrl)
+          .then((data) => saveDocumentToDataStore(data, makeId, makeName))
+          .catch((err) => console.log(
+              ' Error processing in the request chunks',
+              err.message,
+              makeId
+            ))
+      })
+    )
+  }
+}
+
+/**
+ * This Function is Responsible for fetching VehicleMakes Data
+ */
+
+const processDocumentsData = async () => {
+  const vehicleMakesURL =
+    'https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=XML'
+
+  try {
+    const vehicleMakesDataset = await fetchData(vehicleMakesURL)
+    if (vehicleMakesDataset) {
+      const responseCount = get(vehicleMakesDataset, 'Response.Count[0]')
+
+      if (responseCount && parseInt(responseCount, 10) > 0) {
+        const vehicleMakesArray = get(
+          vehicleMakesDataset,
+          'Response.Results[0].AllVehicleMakes',
+          []
+        )
+        processRequestChunks(vehicleMakesArray)
+      }
+    }
+  } catch (err) {
+    console.log('The error message: ', err.message, vehicleMakesURL)
   }
 }
 
