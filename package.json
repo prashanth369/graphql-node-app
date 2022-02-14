@@ -5,7 +5,9 @@
   "repository": "https://github.com/prashanth369/graphql-node-app.git",
   "author": "Prashanth Reddy <prashanth.abc369@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
+    "start": "node ./app.js --exec babel-node",
     "dev": "nodemon ./app.js --exec babel-node",
     "lint": "eslint . --ext .js",
     "lint-fix": "eslint . --ext .js --fix",

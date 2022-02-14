@@ -16,6 +16,7 @@
       "no-plusplus": "off",
       "no-param-reassign": "off",
       "no-underscore-dangle": "off",
+      "import/extensions": "off",
       "no-await-in-loop": "off",
       "indent": "off"
   

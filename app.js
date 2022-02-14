@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import server from './graphql'
-import createConnection from './database'
+import server from './graphql/index.js'
+import createConnection from './database/index.js'
 
 const run = async () => {
   dotenv.config()

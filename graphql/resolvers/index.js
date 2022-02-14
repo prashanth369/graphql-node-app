@@ -1,4 +1,4 @@
-import VehicleMakes from '../../database/models/VehicleMake'
+import VehicleMakes from '../../database/models/VehicleMake.js'
 
 const fetchVehicleMakesFromDB = async (limit) => {
   let vehicleData = []

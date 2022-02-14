@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { Parser } from 'xml2js'
-import { get } from 'lodash'
-import VehicleMake from './models/VehicleMake'
-import VehicleType from './models/VehicleType'
+import lodash from 'lodash'
+import VehicleMake from './models/VehicleMake.js'
+import VehicleType from './models/VehicleType.js'
 
 // Constants
 const parser = new Parser()
+const { get } = lodash
 const DOCUMENT_UPDATE_OPTIONS = {
   upsert: true,
   new: true,
