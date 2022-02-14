@@ -1,15 +1,15 @@
-import VehicleMakes from '../../database/models/VehicleMake.js'
+import VehicleMake from '../../database/models/VehicleMake.js'
 
 const fetchVehicleMakesFromDB = async (limit) => {
   let vehicleData = []
 
   try {
     if (limit && limit > 0) {
-      vehicleData = await VehicleMakes.find()
+      vehicleData = await VehicleMake.find()
         .limit(limit)
         .populate('vehicleTypes', 'typeId typeName')
     } else {
-      vehicleData = await VehicleMakes.find().populate(
+      vehicleData = await VehicleMake.find().populate(
         'vehicleTypes',
         'typeId typeName'
       )
