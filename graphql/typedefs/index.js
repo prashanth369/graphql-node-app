@@ -15,7 +15,7 @@ const typeDefs = gql`
   #Query
 
   type Query {
-    getAllVehicles: [VehicleMake!]!
+    getAllVehicles(limit: Int): [VehicleMake!]!
   }
 `
 

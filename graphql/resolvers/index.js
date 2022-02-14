@@ -1,47 +1,26 @@
-const resolvers = {
-    Query: {
-        getAllVehicles() {
-            return [
-                {
-                    makeId: '1',
-                    makeName: 'something here',
-                    vehicleTypes: [
-                        {
-                            typeId: '1*',
-                            typeName: 'Something here*'
-                        }
-                    ]
+import VehicleMakes from '../../database/models/VehicleMake'
 
-                },
-                {
-                    makeId: '1',
-                    makeName: 'something here',
-                    vehicleTypes: [
-                        {
-                            typeId: '1*',
-                            typeName: 'Something here*'
-                        },
-                        {
-                            typeId: '1**',
-                            typeName: 'Something here **'
-                        }
-                    ]
+const fetchVehicleMakesFromDB = async (limit) => {
+  let vehicleData = []
 
-                },
-                {
-                    makeId: '2',
-                    makeName: 'something There',
-                    vehicleTypes: [
-                        {
-                            typeId: '2*',
-                            typeName: 'Something There*'
-                        }
-                    ]
+  if (limit && limit > 0) {
+    vehicleData = await VehicleMakes.find()
+      .limit(limit)
+      .populate('vehicleTypes', 'typeId typeName')
+  } else {
+    vehicleData = await VehicleMakes.find().populate(
+      'vehicleTypes',
+      'typeId typeName'
+    )
+  }
 
-                }
-            ]
-        }
-    }
+  return vehicleData
 }
 
-export default resolvers;
+const resolvers = {
+  Query: {
+    getAllVehicles: (_parent, args) => fetchVehicleMakesFromDB(args.limit)
+  }
+}
+
+export default resolvers
