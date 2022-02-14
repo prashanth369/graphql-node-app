@@ -22,7 +22,7 @@ const fetchVehicleMakesFromDB = async (limit) => {
 
 const resolvers = {
   Query: {
-    getAllVehicles: (_parent, args) => fetchVehicleMakesFromDB(args.limit)
+    getAllVehicles: (_parent, { limit }) => fetchVehicleMakesFromDB(limit)
   }
 }
 
