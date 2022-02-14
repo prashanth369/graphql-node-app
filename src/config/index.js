@@ -41,12 +41,13 @@ const getConfig = () => {
       case 'EVERY_MONTH':
         schedulerFreq = '0 0 1 * *'
         break
+      case 'EVERY_WEEK':
+        schedulerFreq = '0 0 * * 1'
+        break
       case 'EVERY_DAY':
         schedulerFreq = '0 0 * * *'
         break
-      case 'EVERY_MINUTE':
-        schedulerFreq = '* * * * *'
-        break
+
       default:
         schedulerFreq = '0 0 * * *'
     }
